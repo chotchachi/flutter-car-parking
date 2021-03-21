@@ -50,6 +50,36 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "firebase",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/firebase-7.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
+      "name": "firebase_auth",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.14.0+9",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "firebase_core",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "firebase_core_platform_interface",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "firebase_core_web",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.1.1+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/thanhquang/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -58,6 +88,30 @@
     {
       "name": "flutter_test",
       "rootUri": "file:///Users/thanhquang/flutter/packages/flutter_test",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_web_plugins",
+      "rootUri": "file:///Users/thanhquang/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.12.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.4"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-3.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -80,6 +134,24 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "pedantic",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "quiver",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-2.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/thanhquang/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -87,7 +159,7 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0",
+      "rootUri": "file:///Users/thanhquang/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -140,7 +212,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-18T10:00:27.206198Z",
+  "generated": "2021-03-21T15:07:18.927610Z",
   "generator": "pub",
-  "generatorVersion": "2.12.1"
+  "generatorVersion": "2.13.0-116.0.dev"
 }
