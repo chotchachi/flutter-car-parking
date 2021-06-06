@@ -1,31 +1,53 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-FirebaseAuth auth = FirebaseAuth.instance;
+import 'package:flutter_car_parking/pages/list_place.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(App());
+}
+
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          // return SomethingWentWrong();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyApp();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return MyApp();
+      },
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Car Parking',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: _RegisterEmailSection(),
-    );
+    return MaterialApp(home: ParkingList());
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -33,41 +55,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          Builder(builder: (BuildContext context) {
-            return FlatButton(
-              child: const Text('Sign out'),
-              textColor: Theme.of(context).buttonColor,
-              onPressed: () async {
-                final FirebaseUser user = await auth.currentUser();
-                if (user == null) {
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('No one has signed in.'),
-                  ));
-                  return;
-                }
-                await auth.signOut();
-                final String uid = user.uid;
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
-                ));
-              },
-            );
-          })
-        ],
-      ),
-      body: Builder(builder: (BuildContext context) {
-        return ListView(
-          scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.all(16),
-          children: <Widget>[
-            _RegisterEmailSection(),
-          ],
-        );
-      }),
+    return Container(
+      child: LoginPage(),
     );
   }
 }
@@ -78,36 +67,54 @@ final TextEditingController _passwordController = TextEditingController();
 bool _success;
 String _userEmail;
 
-class _RegisterEmailSection extends StatefulWidget {
-  final String title = 'Registration';
-
+class LoginPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RegisterEmailSectionState();
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
-class _RegisterEmailSectionState extends State<_RegisterEmailSection> {
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
+            Container(
+              width: double.infinity,
+              height: 370,
+              child:
+                  Image.asset('assets/images/login_bg.jpg', fit: BoxFit.fill),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: new EdgeInsets.symmetric(horizontal: 4.0),
+                  child: new IconButton(
+                      icon: IconButton(
+                        icon: Image.asset('assets/images/icon-user.png'),
+                        onPressed: () {},
+                      ),
+                      onPressed: () {}),
+                ),
+                Expanded(
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ],
             ),
             TextFormField(
+              obscureText: true,
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               validator: (String value) {
@@ -118,15 +125,27 @@ class _RegisterEmailSectionState extends State<_RegisterEmailSection> {
               },
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              margin: const EdgeInsets.only(
+                  left: 30.0, right: 30.0, top: 20.0, bottom: 20.0),
               alignment: Alignment.center,
-              child: RaisedButton(
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _register();
-                  }
-                },
-                child: const Text('Submit'),
+              child: ConstrainedBox(
+                constraints:
+                    BoxConstraints.tightFor(width: double.infinity, height: 50),
+                child: ElevatedButton(
+                  child: Text(
+                    'SIGN IN',
+                    style: TextStyle(fontSize: 19),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF00A79B),
+                      shadowColor: Color(0xFF00A79B),
+                      elevation: 1),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      // _register();
+                    }
+                  },
+                ),
               ),
             ),
             Container(
@@ -143,23 +162,52 @@ class _RegisterEmailSectionState extends State<_RegisterEmailSection> {
     );
   }
 
-  void _register() async {
-    final FirebaseUser user = (await auth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-      });
-    } else {
-      setState(() {
-        _success = true;
-      });
-    }
-  }
+  // Row generateTextField(controller, icon Icon) {
+  //   return Row(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: <Widget>[
+  //       Container(
+  //         margin: new EdgeInsets.symmetric(horizontal: 4.0),
+  //         child: new IconButton(
+  //             icon: IconButton(
+  //               icon: Image.asset('assets/images/icon-user.png'),
+  //               onPressed: () {},
+  //             ),
+  //             onPressed: () {}),
+  //       ),
+  //       Expanded(
+  //         child: TextFormField(
+  //           controller: controller,
+  //           decoration: const InputDecoration(labelText: 'Email'),
+  //           validator: (String value) {
+  //             if (value.isEmpty) {
+  //               return 'Please enter some text';
+  //             }
+  //             return null;
+  //           },
+  //         ),
+  //       ),
+  //     ],
+  //   )
+  // }
+
+  // void _register() async {
+  //   final FirebaseUser user = (await auth.createUserWithEmailAndPassword(
+  //     email: _emailController.text,
+  //     password: _passwordController.text,
+  //   ))
+  //       .user;
+  //   if (user != null) {
+  //     setState(() {
+  //       _success = true;
+  //       _userEmail = user.email;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _success = true;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {

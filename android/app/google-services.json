@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "857134785197",
+    "firebase_url": "https://flutter-car-parking-default-rtdb.firebaseio.com",
+    "project_id": "flutter-car-parking",
+    "storage_bucket": "flutter-car-parking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857134785197:android:58e200e2d6fc1ea9781c24",
+        "android_client_info": {
+          "package_name": "com.example.carparking.flutter_car_parking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857134785197-kc6u1g768m40qfo0rdq9ihmph2fecq50.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH4EdsOEhGoYSZXj6V45PR7yNkWwP6-KA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857134785197-kc6u1g768m40qfo0rdq9ihmph2fecq50.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "857134785197-o5drghu83b3c4g95iidtpms1mrfa5mnm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carparking.flutterCarParking"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
