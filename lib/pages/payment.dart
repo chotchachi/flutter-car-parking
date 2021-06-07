@@ -9,17 +9,13 @@ class MyPaymentPage extends StatefulWidget {
   const MyPaymentPage({Key key, this.parkingPlace}) : super(key: key);
 
   @override
-  State createState() => _MyPaymentPageState(this.parkingPlace);
+  State createState() => _MyPaymentPageState();
 }
 
 class _MyPaymentPageState extends State<MyPaymentPage> {
   List _paymentMethod = ['Google Pay', 'Momo', 'Zalo Pay', 'Card'];
   String currentPayment = "";
-
-  final ParkingPlace parkingPlace;
   int selectedPriceIndex = 0;
-
-  _MyPaymentPageState(this.parkingPlace);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +44,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                 height: 24,
               ),
               Text(
-                this.parkingPlace.name,
+                widget.parkingPlace.name,
                 style: TextStyle(
                   fontSize: 34.4,
                   fontWeight: FontWeight.w700,
@@ -59,7 +55,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                 height: 6,
               ),
               Text(
-                this.parkingPlace.address,
+                widget.parkingPlace.address,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
@@ -117,7 +113,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                                       height: 6,
                                     ),
                                     Text(
-                                      '${(index + 1) * this.parkingPlace.price} \$',
+                                      '${(index + 1) * widget.parkingPlace.price} \$',
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -218,7 +214,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                           letterSpacing: 0.2),
                     ),
                     Text(
-                      "${(selectedPriceIndex + 1) * this.parkingPlace.price} \$",
+                      "${(selectedPriceIndex + 1) * widget.parkingPlace.price} \$",
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
@@ -270,7 +266,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
   Future<void> addBooking() {
     // Call the user's CollectionReference to add a new user
     return usersBooking
-        .add(this.parkingPlace.toJson())
+        .add(widget.parkingPlace.toJson())
         .then((value) => print("Booking Added"))
         .catchError((error) => print("Failed to add booking: $error"));
   }

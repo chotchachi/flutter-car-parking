@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
-import 'package:flutter_car_parking/widget/parking_place_sheet.dart';
+import 'package:flutter_car_parking/pages/parking_place_sheet.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
