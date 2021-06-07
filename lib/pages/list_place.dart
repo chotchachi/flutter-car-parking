@@ -66,7 +66,7 @@ class _ParkingList extends State<ParkingList> {
                                   child: StarRating(
                                     size: 20,
                                     color: Colors.yellow[600],
-                                    rating: document.data()['rating'].toDouble();,
+                                    rating: document.data()['rating'].toDouble() ,
                                   ),
                                 ),
                                 Padding(
