@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_car_parking/pages/listparking.dart';
+import 'package:flutter_car_parking/pages/list_place.dart';
 import 'package:flutter_car_parking/pages/map.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
@@ -14,13 +14,13 @@ class _MainScreenState extends State<MainScreen> {
   //page
   List<Widget> page;
   Widget currentPage;
-  ListParkingView parkingView;
+  ParkingList parkingView;
   MapView mapPage;
 
   @override
   void initState() {
     mapPage = MapView();
-    parkingView = ListParkingView();
+    parkingView = ParkingList();
     page = [
       mapPage,
       parkingView,
@@ -68,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.local_parking),
-            title: Text('List Parking'),
+            title: Text('My Parking'),
             activeColor: Colors.blueAccent,
             inactiveColor: Colors.black,
           ),

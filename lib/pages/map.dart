@@ -7,10 +7,6 @@ import 'package:flutter_car_parking/widget/marker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-Position _currentPosition;
-String _currentAddress;
-
 class MapView extends StatefulWidget {
   @override
   State createState() => _MapViewState();
@@ -21,12 +17,11 @@ class _MapViewState extends State<MapView> {
 
   final LatLng _center = const LatLng(16.0472484, 108.1716865);
 
-  List<Marker> customMarkers = [];
+  String searchText = "";
 
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
   }
 
   @override
@@ -37,9 +32,14 @@ class _MapViewState extends State<MapView> {
         children: <Widget>[
           /// Map View
           StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("parking_place")
-                .snapshots(),
+            stream: searchText.isNotEmpty
+                ? FirebaseFirestore.instance
+                    .collection("parking_place")
+                    .where("name", isEqualTo: searchText)
+                    .snapshots()
+                : FirebaseFirestore.instance
+                    .collection("parking_place")
+                    .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -53,32 +53,28 @@ class _MapViewState extends State<MapView> {
               return GoogleMap(
                 onMapCreated: _onMapCreated,
                 markers: snapshot.data.docs.map((DocumentSnapshot document) {
+                  ParkingPlace parkingPlace = ParkingPlace(
+                      document.data()['address'],
+                      document.data()['contact'],
+                      LatLng(document.data()['location'].latitude,
+                          document.data()['location'].longitude),
+                      document.data()['name'],
+                      document.data()['price'],
+                      document.data()['rating'],
+                      document.data()['spots']);
                   return Marker(
-                    markerId: MarkerId(""),
-                    infoWindow: InfoWindow(
-                      title: document.data()['name']
-                    ),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: LatLng(document.data()['location'].latitude,
-                        document.data()['location'].longitude),
-                    onTap: () {
+                      markerId: MarkerId(""),
+                      infoWindow: InfoWindow(title: parkingPlace.name),
+                      icon: BitmapDescriptor.defaultMarker,
+                      position: parkingPlace.location,
+                      onTap: () {
                         showModalBottomSheet(
                             context: context,
                             builder: (BuildContext context) {
                               return ParkingPlaceInfoSheet(
-                                  parkingPlace: ParkingPlace(
-                                      document.data()['name'],
-                                      document.data()['address'],
-                                      document.data()['price'],
-                                      ParkingLocation(
-                                          document.data()['location'].latitude,
-                                          document
-                                              .data()['location']
-                                              .longitude),
-                                      document.data()['rating']));
+                                  parkingPlace: parkingPlace);
                             });
-                      }
-                  );
+                      });
                 }).toSet(),
                 myLocationEnabled: true,
                 initialCameraPosition: CameraPosition(
@@ -90,39 +86,6 @@ class _MapViewState extends State<MapView> {
           ),
 
           /// Search View
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 28, top: 100, right: 28, bottom: 10),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-                side: BorderSide.none,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListTile(
-                  title: TextField(
-                    enabled: true,
-                    decoration: InputDecoration.collapsed(
-                        hintText: 'Search parking place',
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey[500],
-                            letterSpacing: 0.2)),
-                    onChanged: (text) {
-                      //TODO()
-                    },
-                  ),
-                  trailing: Icon(
-                    Icons.search,
-                    size: 27,
-                    color: Colors.orange[400],
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -130,32 +93,5 @@ class _MapViewState extends State<MapView> {
 
   _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-  }
-
-  _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-      _getAddressFromLatLng();
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
-  _getAddressFromLatLng() async {
-    try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _currentPosition.latitude, _currentPosition.longitude);
-      Placemark place = p[0];
-      setState(() {
-        _currentAddress =
-            "${place.locality}, ${place.postalCode}, ${place.country}";
-      });
-    } catch (e) {
-      print(e);
-    }
   }
 }

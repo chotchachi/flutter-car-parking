@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
+import 'package:flutter_car_parking/pages/payment.dart';
 import 'package:flutter_car_parking/transitions/SlideTransition.dart';
 
 class ParkingPlaceInfoSheet extends StatelessWidget {
@@ -10,6 +11,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      initialChildSize: 1,
       builder: (context, scrollController) {
         return SingleChildScrollView(
           controller: scrollController,
@@ -57,6 +59,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                           ),
                           Text(
                             parkingPlace.address,
+                            maxLines: 3,
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black54,
@@ -84,7 +87,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                                 width: 4,
                               ),
                               Text(
-                                '24 spots',
+                                '${parkingPlace.spots} spots',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12.4),
@@ -108,7 +111,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                                 width: 4,
                               ),
                               Text(
-                                '${parkingPlace.price}/h',
+                                '${parkingPlace.price} \$/h',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12.4),
@@ -142,7 +145,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6)),
                       onPressed: () {
-                        // Navigator.push(context, SlideTopRoute(page: MyPaymentPage()));
+                        Navigator.push(context, SlideTopRoute(page: MyPaymentPage(parkingPlace: this.parkingPlace)));
                       },
                       color: Colors.black87,
                       padding: EdgeInsets.symmetric(vertical: 14),
@@ -230,37 +233,11 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        '886-445-7822',
+                        parkingPlace.contact,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: Colors.grey[900],
                             fontSize: 18,
-                            letterSpacing: 0.2),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 24.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.web_asset,
-                        size: 16,
-                        color: Colors.grey[700],
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'perdoGarage.co.us',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey[900],
-                            fontSize: 14.4,
                             letterSpacing: 0.2),
                       ),
                     ],

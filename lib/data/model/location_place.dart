@@ -1,17 +1,27 @@
-class ParkingLocation {
-  double lat, lng;
-
-  ParkingLocation(this.lat, this.lng);
-}
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ParkingPlace {
-  String name;
   String address;
-  String price;
-  ParkingLocation location;
-  int rating;
+  String contact;
+  LatLng location;
+  String name;
+  int price;
+  int rating = 0;
+  int spots = 0;
 
-  ParkingPlace(this.name, this.address, this.price, this.location, this.rating);
+  ParkingPlace(this.address, this.contact, this.location, this.name, this.price, this.rating, this.spots);
+
+  Map<String, Object> toJson() {
+    return {
+      'address': this.address,
+      'contact': this.contact,
+      'location': this.location,
+      'name': this.name,
+      'price': this.price,
+      'rating': this.rating,
+      'spots': this.spots
+    };
+  }
 }
 
 // List recentList = [
