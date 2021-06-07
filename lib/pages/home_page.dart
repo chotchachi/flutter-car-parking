@@ -72,12 +72,6 @@ class _MainScreenState extends State<MainScreen> {
             activeColor: Colors.blueAccent,
             inactiveColor: Colors.black,
           ),
-          BottomNavyBarItem(
-            icon: Icon(Icons.supervised_user_circle_sharp),
-            title: Text('My profile'),
-            activeColor: Colors.blueAccent,
-            inactiveColor: Colors.black,
-          ),
         ],
       ),
       body: currentPage,
