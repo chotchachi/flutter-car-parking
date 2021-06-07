@@ -1,21 +1,26 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ParkingPlace {
   String address;
   String contact;
-  LatLng location;
+  GeoPoint location;
   String name;
   int price;
   int rating = 0;
   int spots = 0;
 
-  ParkingPlace(this.address, this.contact, this.location, this.name, this.price, this.rating, this.spots);
+  ParkingPlace(this.address, this.contact, this.location, this.name, this.price,
+      this.rating, this.spots);
+
+  ParkingPlace.fromJson(Map<String, Object> json)
+      : this(json['address'], json['contact'], json['location'], json['name'],
+            json['price'], json['rating'], json['spots']);
 
   Map<String, Object> toJson() {
     return {
       'address': this.address,
       'contact': this.contact,
-      'location': this.location,
+      'location': this.location.latitude,
       'name': this.name,
       'price': this.price,
       'rating': this.rating,

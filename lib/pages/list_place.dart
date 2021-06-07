@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/widget/Rating.dart';
 
-
 class ParkingList extends StatefulWidget {
   @override
   State createState() => _ParkingList();
@@ -12,9 +11,9 @@ class ParkingList extends StatefulWidget {
 class _ParkingList extends State<ParkingList> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User user;
-  bool isloggedin = false;
+  bool isLoggedIn = false;
 
-  checkAuthentification() async {
+  checkAuthentication() async {
     _auth.authStateChanges().listen((user) {
       if (user == null) {
         Navigator.of(context).pushReplacementNamed("start");
@@ -30,7 +29,7 @@ class _ParkingList extends State<ParkingList> {
     if (firebaseUser != null) {
       setState(() {
         this.user = firebaseUser;
-        this.isloggedin = true;
+        this.isLoggedIn = true;
       });
     }
   }
@@ -38,17 +37,19 @@ class _ParkingList extends State<ParkingList> {
   @override
   void initState() {
     super.initState();
-    this.checkAuthentification();
+    this.checkAuthentication();
     this.getUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection("parking_place").snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("booking_history")
+            .doc(user.uid)
+            .collection("booking_history")
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -62,7 +63,7 @@ class _ParkingList extends State<ParkingList> {
             children: snapshot.data.docs.map((DocumentSnapshot document) {
               return Padding(
                 padding:
-                const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
+                    const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
                 child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
@@ -101,7 +102,8 @@ class _ParkingList extends State<ParkingList> {
                                   child: StarRating(
                                     size: 20,
                                     color: Colors.yellow[600],
-                                    rating: document.data()['rating'].toDouble() ,
+                                    rating:
+                                        document.data()['rating'].toDouble(),
                                   ),
                                 ),
                                 Padding(
