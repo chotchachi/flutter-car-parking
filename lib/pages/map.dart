@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
 import 'package:flutter_car_parking/widget/BottomSheet.dart';
 import 'package:flutter_car_parking/widget/marker.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+Position _currentPosition;
+String _currentAddress;
 
 class MapView extends StatefulWidget {
   @override
@@ -13,29 +17,79 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(16.0472484, 108.1716865);
+
+  List<Marker> customMarkers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   leading: Padding(
-      //     padding: const EdgeInsets.only(left: 10.0),
-      //     child: GestureDetector(
-      //       onTap: () {
-      //         Navigator.pop(context, true);
-      //       },
-      //       child: Icon(
-      //         Icons.arrow_back,
-      //         color: Colors.black.withOpacity(0.6),
-      //         size: 20,
-      //       ),
-      //     ),
-      //   ),
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       body: Stack(
         children: <Widget>[
+          /// Map View
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("parking_place")
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+
+              return GoogleMap(
+                onMapCreated: _onMapCreated,
+                markers: snapshot.data.docs.map((DocumentSnapshot document) {
+                  return Marker(
+                    markerId: MarkerId(""),
+                    infoWindow: InfoWindow(
+                      title: document.data()['name']
+                    ),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: LatLng(document.data()['location'].latitude,
+                        document.data()['location'].longitude),
+                    onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ParkingPlaceInfoSheet(
+                                  parkingPlace: ParkingPlace(
+                                      document.data()['name'],
+                                      document.data()['address'],
+                                      document.data()['price'],
+                                      ParkingLocation(
+                                          document.data()['location'].latitude,
+                                          document
+                                              .data()['location']
+                                              .longitude),
+                                      document.data()['rating']));
+                            });
+                      }
+                  );
+                }).toSet(),
+                myLocationEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 10.0,
+                ),
+              );
+            },
+          ),
+
+          /// Search View
           Padding(
             padding: const EdgeInsets.only(
                 left: 28, top: 100, right: 28, bottom: 10),
@@ -69,47 +123,39 @@ class _MapViewState extends State<MapView> {
               ),
             ),
           ),
-          StreamBuilder(
-            stream:
-            FirebaseFirestore.instance.collection("parking_place").snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
-              }
-
-              return FlutterMap(
-                options: MapOptions(
-                    center: LatLng(16.0472484, 108.1716865),
-                    minZoom: 13.5,
-                    maxZoom: 14.5,
-                    zoom: 14.0),
-                layers: [
-                  TileLayerOptions(
-                      urlTemplate:
-                      "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-                      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']),
-                  MarkerLayerOptions(
-                    markers: snapshot.data.docs.map((DocumentSnapshot document) {
-                      return Marker(
-                          width: 40,
-                          height: 40,
-                          point: LatLng(document.data()['location'].latitude, document.data()['location'].longitude),
-                          builder: (context) {
-                            return CustomMarker(Icons.local_parking,'34');
-                          }
-                      );
-                    }).toList()
-                  ),
-                ],
-              );
-            },
-          ),
         ],
       ),
     );
+  }
+
+  _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  _getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+      Placemark place = p[0];
+      setState(() {
+        _currentAddress =
+            "${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
