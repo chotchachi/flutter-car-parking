@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
 import 'package:flutter_car_parking/widget/BottomSheet.dart';
-import 'package:flutter_car_parking/widget/marker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
