@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/pages/list_place.dart';
 import 'package:flutter_car_parking/pages/map.dart';
@@ -9,6 +10,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   int _currentIndex = 0;
 
   //page
@@ -17,8 +20,17 @@ class _MainScreenState extends State<MainScreen> {
   ParkingList parkingView;
   MapView mapPage;
 
+  checkAuthentication() async {
+    _auth.authStateChanges().listen((user) {
+      if (user == null) {
+        Navigator.of(context).pushReplacementNamed("start");
+      }
+    });
+  }
+
   @override
   void initState() {
+    checkAuthentication();
     mapPage = MapView();
     parkingView = ParkingList();
     page = [

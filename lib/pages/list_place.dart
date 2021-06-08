@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/booking.dart';
-import 'package:flutter_car_parking/widget/Rating.dart';
 
 class ParkingList extends StatefulWidget {
   @override
@@ -11,16 +10,8 @@ class ParkingList extends StatefulWidget {
 
 class _ParkingList extends State<ParkingList> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User user;
-  bool isLoggedIn = false;
-
-  checkAuthentication() async {
-    _auth.authStateChanges().listen((user) {
-      if (user == null) {
-        Navigator.of(context).pushReplacementNamed("start");
-      }
-    });
-  }
+  User _currentUser;
+  bool _isLoading = false;
 
   getUser() async {
     User firebaseUser = _auth.currentUser;
@@ -29,8 +20,8 @@ class _ParkingList extends State<ParkingList> {
 
     if (firebaseUser != null) {
       setState(() {
-        this.user = firebaseUser;
-        this.isLoggedIn = true;
+        this._currentUser = firebaseUser;
+        this._isLoading = false;
       });
     }
   }
@@ -38,17 +29,21 @@ class _ParkingList extends State<ParkingList> {
   @override
   void initState() {
     super.initState();
-    this.checkAuthentication();
+    this._isLoading = true;
     this.getUser();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (this._isLoading)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("booking_history")
-            .doc("6VrU2wsmdnc2Rrz8Al16vNZiYKi1")
+            .doc(this._currentUser.uid)
             .collection("booking_history")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -96,7 +91,8 @@ class _ParkingList extends State<ParkingList> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                            padding: const EdgeInsets.only(
+                                top: 8.0, left: 8.0, right: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               mainAxisSize: MainAxisSize.max,
@@ -104,7 +100,7 @@ class _ParkingList extends State<ParkingList> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 12.0),
                                   child: Text(
-                                    'Total price: ${bookingParking.unitPrice*bookingParking.hours} \$',
+                                    'Total price: ${bookingParking.unitPrice * bookingParking.hours} \$',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,
