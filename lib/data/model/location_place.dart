@@ -20,7 +20,7 @@ class ParkingPlace {
     return {
       'address': this.address,
       'contact': this.contact,
-      'location': this.location.latitude,
+      'location': this.location,
       'name': this.name,
       'price': this.price,
       'rating': this.rating,

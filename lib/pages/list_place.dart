@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_parking/data/model/booking.dart';
 import 'package:flutter_car_parking/widget/Rating.dart';
 
 class ParkingList extends StatefulWidget {
@@ -47,7 +48,7 @@ class _ParkingList extends State<ParkingList> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("booking_history")
-            .doc(user.uid)
+            .doc("6VrU2wsmdnc2Rrz8Al16vNZiYKi1")
             .collection("booking_history")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -61,6 +62,9 @@ class _ParkingList extends State<ParkingList> {
 
           return ListView(
             children: snapshot.data.docs.map((DocumentSnapshot document) {
+              BookingParking bookingParking =
+                  BookingParking.fromJson(document.data());
+
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
@@ -75,7 +79,7 @@ class _ParkingList extends State<ParkingList> {
                         children: <Widget>[
                           ListTile(
                             title: Text(
-                              '${document.data()['name']}',
+                              bookingParking.name,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
@@ -83,7 +87,7 @@ class _ParkingList extends State<ParkingList> {
                                   letterSpacing: 0.2),
                             ),
                             subtitle: Text(
-                              '${document.data()['address']}',
+                              bookingParking.address,
                               style: TextStyle(
                                   color: Colors.white70,
                                   fontWeight: FontWeight.w400,
@@ -92,24 +96,15 @@ class _ParkingList extends State<ParkingList> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
+                            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 12.0),
-                                  child: StarRating(
-                                    size: 20,
-                                    color: Colors.yellow[600],
-                                    rating:
-                                        document.data()['rating'].toDouble(),
-                                  ),
-                                ),
-                                Padding(
                                   padding: const EdgeInsets.only(right: 12.0),
                                   child: Text(
-                                    '${document.data()['price']}',
+                                    'Total price: ${bookingParking.unitPrice*bookingParking.hours} \$',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,

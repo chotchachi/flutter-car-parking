@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_parking/data/model/booking.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
 
 class MyPaymentPage extends StatefulWidget {
@@ -264,9 +265,16 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
       .collection("booking_history");
 
   Future<void> addBooking() {
-    // Call the user's CollectionReference to add a new user
+    BookingParking bookingParking = BookingParking(
+        widget.parkingPlace.name,
+        widget.parkingPlace.address,
+        widget.parkingPlace.location,
+        widget.parkingPlace.price,
+        selectedPriceIndex + 1,
+        Timestamp.fromDate(DateTime.now()));
+
     return usersBooking
-        .add(widget.parkingPlace.toJson())
+        .add(bookingParking.toJson())
         .then((value) => print("Booking Added"))
         .catchError((error) => print("Failed to add booking: $error"));
   }
