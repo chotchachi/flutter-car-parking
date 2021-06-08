@@ -146,6 +146,7 @@ class _MapViewState extends State<MapView> {
   ) async {
     print(
         ">>> $startLatitude - $startLongitude - $destinationLatitude - $destinationLongitude");
+    polylineCoordinates.clear();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       "AIzaSyBvWYZCRShTbdhMF--MNOFJKhkhZoB2-vc",
@@ -154,18 +155,19 @@ class _MapViewState extends State<MapView> {
       travelMode: TravelMode.transit,
     );
 
-    polylineCoordinates.clear();
-
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
 
+    print(">>> ${result.errorMessage}");
+    print(">>> $polylineCoordinates");
+
     PolylineId id = PolylineId('poly');
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Colors.blue,
       points: polylineCoordinates,
       width: 3,
     );
