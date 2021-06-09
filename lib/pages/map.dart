@@ -23,7 +23,7 @@ class _MapViewState extends State<MapView> {
   String _placeDistance = '';
 
   /// Map
-  GoogleMapController mapController;
+  GoogleMapController _mapController;
   CameraPosition _initialLocation =
       CameraPosition(target: LatLng(16.0472484, 108.1716865), zoom: 10.0);
 
@@ -34,7 +34,7 @@ class _MapViewState extends State<MapView> {
   List<LatLng> polylineCoordinates = [];
 
   _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    _mapController = controller;
   }
 
   Future<bool> _calculateDistance(GeoPoint destinationPoint) async {
@@ -97,7 +97,7 @@ class _MapViewState extends State<MapView> {
     double northEastLatitude = maxy;
     double northEastLongitude = maxx;
 
-    mapController.animateCamera(
+    _mapController.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
           northeast: LatLng(northEastLatitude, northEastLongitude),
@@ -281,42 +281,6 @@ class _MapViewState extends State<MapView> {
             },
           ),
 
-          /// My Location Button
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-                child: ClipOval(
-                  child: Material(
-                    color: Colors.green.shade100, // button color
-                    child: InkWell(
-                      splashColor: Colors.green, // inkwell color
-                      child: SizedBox(
-                        width: 56,
-                        height: 56,
-                        child: Icon(Icons.my_location),
-                      ),
-                      onTap: () {
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: LatLng(
-                                _currentPosition.latitude,
-                                _currentPosition.longitude,
-                              ),
-                              zoom: 18.0,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
           /// Direction View
           Visibility(
               child: Padding(
@@ -440,6 +404,30 @@ class _MapViewState extends State<MapView> {
               visible: selectedParkingPlace == null)
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.my_location),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        onPressed: () {
+          _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(
+                  _currentPosition.latitude,
+                  _currentPosition.longitude,
+                ),
+                zoom: 18.0,
+              ),
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
   }
 }
