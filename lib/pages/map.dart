@@ -205,6 +205,8 @@ class _MapViewState extends State<MapView> {
   /// Search
   String searchText = "";
 
+  ParkingPlace selectedParkingPlace;
+
   @override
   void initState() {
     super.initState();
@@ -259,6 +261,7 @@ class _MapViewState extends State<MapView> {
                           title: parkingPlace.name,
                           snippet: "Tap to direction",
                           onTap: () {
+                            selectedParkingPlace = parkingPlace;
                             _calculateDistance(parkingPlace.location);
                           }),
                       icon: BitmapDescriptor.defaultMarker,
@@ -314,40 +317,127 @@ class _MapViewState extends State<MapView> {
             ),
           ),
 
-          /// Search View
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 28, top: 100, right: 28, bottom: 10),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-                side: BorderSide.none,
-              ),
+          /// Direction View
+          Visibility(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListTile(
-                  title: TextField(
-                    enabled: true,
-                    decoration: InputDecoration.collapsed(
-                        hintText: 'Search parking place',
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey[500],
-                            letterSpacing: 0.2)),
-                    onChanged: (text) {
-                      //TODO("")
-                    },
-                  ),
-                  trailing: Icon(
-                    Icons.search,
-                    size: 27,
-                    color: Colors.orange[400],
+                padding:
+                    EdgeInsets.only(left: 28, top: 28, right: 28, bottom: 10),
+                child: SafeArea(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20.0),
+                          ),
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("From your location"),
+                              SizedBox(height: 10),
+                              Text(
+                                  "To ${selectedParkingPlace == null ? "" : selectedParkingPlace.name}"),
+                              SizedBox(height: 10),
+                              Visibility(
+                                visible: _placeDistance == null ? false : true,
+                                child: Text(
+                                  'DISTANCE: $_placeDistance km',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+              visible: selectedParkingPlace != null),
+
+          /// Cancel Direction View
+          Visibility(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedParkingPlace = null;
+                            polylineCoordinates.clear();
+                            polylines.clear();
+                          });
+                        },
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        color: Colors.red[500],
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        child: Text(
+                          'CANCEL DIRECTION',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              wordSpacing: 2,
+                              letterSpacing: 0.3),
+                        ),
+                      )),
+                ),
+              ),
+              visible: selectedParkingPlace != null),
+
+          /// Search View
+          Visibility(
+              child: Padding(
+                padding:
+                    EdgeInsets.only(left: 28, top: 56, right: 28, bottom: 10),
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: BorderSide.none,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ListTile(
+                      title: TextField(
+                        enabled: true,
+                        decoration: InputDecoration.collapsed(
+                            hintText: 'Search parking place',
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[500],
+                                letterSpacing: 0.2)),
+                        onChanged: (text) {
+                          //TODO("")
+                        },
+                      ),
+                      trailing: Icon(
+                        Icons.search,
+                        size: 27,
+                        color: Colors.orange[400],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              visible: selectedParkingPlace == null)
         ],
       ),
     );
