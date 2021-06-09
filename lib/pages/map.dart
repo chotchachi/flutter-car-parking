@@ -26,6 +26,7 @@ class _MapViewState extends State<MapView> {
   GoogleMapController _mapController;
   CameraPosition _initialLocation =
       CameraPosition(target: LatLng(16.0472484, 108.1716865), zoom: 10.0);
+  CameraPosition _lastLocation;
 
   Set<Marker> markers = {};
 
@@ -245,12 +246,15 @@ class _MapViewState extends State<MapView> {
 
               return GoogleMap(
                 onMapCreated: _onMapCreated,
+                onCameraMove: (position) {
+                  _lastLocation = position;
+                },
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
                 mapType: MapType.normal,
                 zoomGesturesEnabled: true,
                 zoomControlsEnabled: false,
-                initialCameraPosition: _initialLocation,
+                initialCameraPosition: _lastLocation == null ? _initialLocation : _lastLocation,
                 polylines: Set<Polyline>.of(polylines.values),
                 markers: snapshot.data.docs.map((DocumentSnapshot document) {
                   ParkingPlace parkingPlace =
