@@ -14,10 +14,16 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  /// Locator
+  final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
+  Position _currentPosition;
+  String _currentAddress;
+
   /// Map
   GoogleMapController mapController;
   CameraPosition _initialLocation =
-      CameraPosition(target: LatLng(0.0, 0.0), zoom: 10.0);
+      CameraPosition(target: LatLng(16.0472484, 108.1716865), zoom: 10.0);
+
   Set<Marker> markers = {};
 
   String _startAddress = '';
@@ -149,7 +155,7 @@ class _MapViewState extends State<MapView> {
     polylineCoordinates.clear();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyBvWYZCRShTbdhMF--MNOFJKhkhZoB2-vc",
+      "AIzaSyAjiKCVyG8wqVDO0P5T6PSFsWNL4XpxghE",
       PointLatLng(startLatitude, startLongitude),
       PointLatLng(destinationLatitude, destinationLongitude),
       travelMode: TravelMode.transit,
@@ -174,11 +180,6 @@ class _MapViewState extends State<MapView> {
     polylines[id] = polyline;
   }
 
-  /// Locator
-  final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
-  Position _currentPosition;
-  String _currentAddress;
-
   _getCurrentLocation() {
     geoLocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
@@ -200,6 +201,7 @@ class _MapViewState extends State<MapView> {
       setState(() {
         _currentAddress =
             "${place.locality}, ${place.postalCode}, ${place.country}";
+        print(">>> Current address $_currentAddress");
       });
     } catch (e) {
       print(e);
