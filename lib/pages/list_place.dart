@@ -92,6 +92,36 @@ class _ParkingList extends State<ParkingList> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
+                              top: 5, bottom: 5, left: 10, right: 10
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.calendar_today,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  color: Colors.grey[900],
+                                  elevation: 4,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  DateTime.fromMillisecondsSinceEpoch(bookingParking.bookingTime.millisecondsSinceEpoch).toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.4),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
                                 top: 8.0, left: 8.0, right: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
