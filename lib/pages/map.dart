@@ -391,11 +391,16 @@ class _MapViewState extends State<MapView> {
                         onChanged: (text) {
                           //TODO("")
                         },
+                        onSubmitted: (text) {
+                          setState(() {
+                            searchText = text;
+                          });
+                        },
                       ),
                       trailing: Icon(
                         Icons.search,
                         size: 27,
-                        color: Colors.orange[400],
+                        color: Colors.blue,
                       ),
                     ),
                   ),
