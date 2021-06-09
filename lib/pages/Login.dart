@@ -13,7 +13,7 @@ class _LoginState extends State<Login> {
 
   String _email, _password;
 
-  checkAuthentification() async {
+  checkAuthentication() async {
     _auth.authStateChanges().listen((user) {
       if (user != null) {
         print(user);
@@ -26,10 +26,12 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    this.checkAuthentification();
+    this.checkAuthentication();
   }
 
   login() async {
+    showLoaderDialog();
+
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -37,10 +39,30 @@ class _LoginState extends State<Login> {
         await _auth.signInWithEmailAndPassword(
             email: _email, password: _password);
       } catch (e) {
+        Navigator.pop(context);
         showError(e.message);
         print(e);
       }
     }
+  }
+
+  showLoaderDialog() {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   showError(String errormessage) {
@@ -69,87 +91,96 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: 430,
-                  child: Image(
-                    image: AssetImage("assets/images/1.png"),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Container(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: TextFormField(
-                              validator: (input) {
-                                if (input.isEmpty) return 'Enter Email';
-                              },
-                              decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  prefixIcon: Icon(Icons.email)),
-                              onSaved: (input) => _email = input),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: TextFormField(
-                              validator: (input) {
-                                if (input.length < 6)
-                                  return 'Provide Minimum 6 Character';
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                prefixIcon: Icon(Icons.lock),
-                              ),
-                              obscureText: true,
-                              onSaved: (input) => _password = input),
-                        ),
-                        SizedBox(height: 20),
-                        RaisedButton(
-                          padding: EdgeInsets.fromLTRB(140, 15, 140, 15),
-                          onPressed: login,
-                          child: Text('LOGIN',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold)),
-                          color: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 430,
+              child: Image(
+                image: AssetImage("assets/images/1.png"),
+                fit: BoxFit.contain,
+              ),
+            ),
+            Container(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                          initialValue: "thanhquang.stahli@gmail.com",
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return 'Enter Email';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email)),
+                          onSaved: (input) => _email = input),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: TextFormField(
+                          initialValue: "2451999",
+                          validator: (input) {
+                            if (input.length < 6) {
+                              return 'Provide Minimum 6 Character';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock),
                           ),
-                        )
-                      ],
+                          obscureText: true,
+                          onSaved: (input) => _password = input),
                     ),
-                  ),
-                ),
-                SizedBox(height: 15.0),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                            icon: Image.asset('assets/images/facebook.png'),
-                            onPressed: () {}),
-                        IconButton(
-                            icon: Image.asset('assets/images/google.png'),
-                            onPressed: () {}),
-                      ],
-                    ),
+                    SizedBox(height: 20),
+                    RaisedButton(
+                      padding: EdgeInsets.fromLTRB(140, 15, 140, 15),
+                      onPressed: login,
+                      child: Text('LOGIN',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold)),
+                      color: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    )
                   ],
                 ),
-                GestureDetector(
-                  child: Text('Don\'t have accound? Sign Up'),
-                  onTap: navigateToSignUp,
+              ),
+            ),
+            SizedBox(height: 15.0),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        icon: Image.asset('assets/images/facebook.png'),
+                        onPressed: () {}),
+                    IconButton(
+                        icon: Image.asset('assets/images/google.png'),
+                        onPressed: () {}),
+                  ],
                 ),
               ],
             ),
-          ),
-        ));
+            GestureDetector(
+              child: Text('Don\'t have account? Sign Up'),
+              onTap: navigateToSignUp,
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
