@@ -98,7 +98,7 @@ class _ParkingList extends State<ParkingList> {
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
+                                  padding: const EdgeInsets.only(left: 10.0),
                                   child: Text(
                                     'Total price: ${bookingParking.unitPrice * bookingParking.hours} \$',
                                     style: TextStyle(

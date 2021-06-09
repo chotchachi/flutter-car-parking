@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/data/model/location_place.dart';
 import 'package:flutter_car_parking/pages/payment.dart';
 import 'package:flutter_car_parking/transitions/SlideTransition.dart';
+import 'package:flutter_car_parking/widget/Rating.dart';
 
 class ParkingPlaceInfoSheet extends StatelessWidget {
   final ParkingPlace parkingPlace;
@@ -55,7 +56,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: 8,
+                            height: 10,
                           ),
                           Text(
                             parkingPlace.address,
@@ -65,6 +66,14 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                                 color: Colors.black54,
                                 fontSize: 12,
                                 letterSpacing: 0.2),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StarRating(
+                            size: 20,
+                            color: Colors.yellow[600],
+                            rating: parkingPlace.rating.toDouble(),
                           ),
                           SizedBox(
                             height: 20,
@@ -121,18 +130,6 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18.0, top: 8),
-                      child: ClipRRect(
-                        // child: Image.asset(
-                        //   'image/garage.jpg',
-                        //   fit: BoxFit.cover,
-                        //   width: 120,
-                        //   height: 110,
-                        // ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
                   ],
                 ),
                 Padding(
@@ -145,7 +142,11 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6)),
                       onPressed: () {
-                        Navigator.push(context, SlideTopRoute(page: MyPaymentPage(parkingPlace: this.parkingPlace)));
+                        Navigator.push(
+                            context,
+                            SlideTopRoute(
+                                page: MyPaymentPage(
+                                    parkingPlace: this.parkingPlace)));
                       },
                       color: Colors.blue,
                       padding: EdgeInsets.symmetric(vertical: 14),
@@ -162,7 +163,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -176,7 +177,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -190,7 +191,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 6,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -204,7 +205,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 38,
+                  height: 30,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -218,7 +219,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -233,7 +234,9 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        parkingPlace.contact,
+                        parkingPlace.contact.isNotEmpty
+                            ? parkingPlace.contact
+                            : "No contact phone number",
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: Colors.grey[900],
@@ -244,7 +247,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 44,
+                  height: 20,
                 ),
               ],
             ),
