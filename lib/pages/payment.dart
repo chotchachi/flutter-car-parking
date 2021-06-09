@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_car_parking/data/model/booking.dart';
@@ -17,6 +18,27 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
   List _paymentMethod = ['Google Pay', 'Momo', 'Zalo Pay', 'Card'];
   String currentPayment = "";
   int selectedPriceIndex = 0;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User _currentUser;
+
+  getUser() async {
+    User firebaseUser = _auth.currentUser;
+    await firebaseUser?.reload();
+    firebaseUser = _auth.currentUser;
+
+    if (firebaseUser != null) {
+      setState(() {
+        this._currentUser = firebaseUser;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +111,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Card(
                             color: (this.selectedPriceIndex == index)
-                                ? Colors.blue[300]
+                                ? Colors.blue
                                 : Colors.white,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -161,7 +183,7 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
                           child: Card(
                             color: (this.currentPayment ==
                                     this._paymentMethod[index])
-                                ? Colors.blue[300]
+                                ? Colors.blue
                                 : Colors.white,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -259,12 +281,12 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
     );
   }
 
-  CollectionReference usersBooking = FirebaseFirestore.instance
-      .collection('booking_history')
-      .doc("6VrU2wsmdnc2Rrz8Al16vNZiYKi1")
-      .collection("booking_history");
-
   Future<void> addBooking() {
+    CollectionReference usersBooking = FirebaseFirestore.instance
+        .collection('booking_history')
+        .doc(this._currentUser.uid)
+        .collection("booking_history");
+
     BookingParking bookingParking = BookingParking(
         widget.parkingPlace.name,
         widget.parkingPlace.address,
@@ -275,7 +297,17 @@ class _MyPaymentPageState extends State<MyPaymentPage> {
 
     return usersBooking
         .add(bookingParking.toJson())
-        .then((value) => print("Booking Added"))
-        .catchError((error) => print("Failed to add booking: $error"));
+        .then((value) => {
+              print("Booking Added"),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Booking successfully"),
+              ))
+            })
+        .catchError((error) => {
+              print("Failed to add booking: $error"),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Booking failed"),
+              ))
+            });
   }
 }
