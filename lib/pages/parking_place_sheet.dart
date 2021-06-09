@@ -147,7 +147,7 @@ class ParkingPlaceInfoSheet extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(context, SlideTopRoute(page: MyPaymentPage(parkingPlace: this.parkingPlace)));
                       },
-                      color: Colors.black87,
+                      color: Colors.blue,
                       padding: EdgeInsets.symmetric(vertical: 14),
                       child: Text(
                         'BOOK PARKING',

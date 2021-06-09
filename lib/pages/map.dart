@@ -289,9 +289,9 @@ class _MapViewState extends State<MapView> {
                 padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
                 child: ClipOval(
                   child: Material(
-                    color: Colors.orange.shade100, // button color
+                    color: Colors.green.shade100, // button color
                     child: InkWell(
-                      splashColor: Colors.orange, // inkwell color
+                      splashColor: Colors.green, // inkwell color
                       child: SizedBox(
                         width: 56,
                         height: 56,

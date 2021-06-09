@@ -66,8 +66,8 @@ class _ParkingList extends State<ParkingList> {
                 child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
-                    elevation: 6,
-                    color: Colors.black.withOpacity(0.8),
+                    elevation: 3,
+                    color: Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 14),
                       child: Column(
@@ -76,7 +76,7 @@ class _ParkingList extends State<ParkingList> {
                             title: Text(
                               bookingParking.name,
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 17.5,
                                   letterSpacing: 0.2),
@@ -84,7 +84,7 @@ class _ParkingList extends State<ParkingList> {
                             subtitle: Text(
                               bookingParking.address,
                               style: TextStyle(
-                                  color: Colors.white70,
+                                  color: Colors.grey,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 13.5,
                                   letterSpacing: 0.1),
@@ -102,7 +102,7 @@ class _ParkingList extends State<ParkingList> {
                                   child: Text(
                                     'Total price: ${bookingParking.unitPrice * bookingParking.hours} \$',
                                     style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.blue,
                                         fontWeight: FontWeight.w800,
                                         fontSize: 17),
                                   ),
