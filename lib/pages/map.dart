@@ -17,7 +17,10 @@ class _MapViewState extends State<MapView> {
   /// Locator
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
   Position _currentPosition;
-  String _currentAddress;
+
+  String _currentAddress = '';
+  String _destinationAddress = '';
+  String _placeDistance = '';
 
   /// Map
   GoogleMapController mapController;
@@ -25,10 +28,6 @@ class _MapViewState extends State<MapView> {
       CameraPosition(target: LatLng(16.0472484, 108.1716865), zoom: 10.0);
 
   Set<Marker> markers = {};
-
-  String _startAddress = '';
-  String _destinationAddress = '';
-  String _placeDistance = '';
 
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
@@ -39,13 +38,8 @@ class _MapViewState extends State<MapView> {
   }
 
   Future<bool> _calculateDistance(GeoPoint destinationPoint) async {
-    double startLatitude = _startAddress == _currentAddress
-        ? _currentPosition.latitude
-        : 15.979068614298885;
-
-    double startLongitude = _startAddress == _currentAddress
-        ? _currentPosition.longitude
-        : 108.25042895766998;
+    double startLatitude = _currentPosition.latitude;
+    double startLongitude = _currentPosition.longitude;
 
     double destinationLatitude = destinationPoint.latitude;
     double destinationLongitude = destinationPoint.longitude;
@@ -59,7 +53,7 @@ class _MapViewState extends State<MapView> {
       position: LatLng(startLatitude, startLongitude),
       infoWindow: InfoWindow(
         title: 'Start $startCoordinatesString',
-        snippet: _startAddress,
+        snippet: _currentAddress,
       ),
       icon: BitmapDescriptor.defaultMarker,
     );
