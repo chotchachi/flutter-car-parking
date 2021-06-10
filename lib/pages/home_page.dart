@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_car_parking/pages/list_place.dart';
 import 'package:flutter_car_parking/pages/map.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter_car_parking/pages/profile.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget currentPage;
   ParkingList parkingView;
   MapView mapPage;
+  Profile profile;
 
   checkAuthentication() async {
     _auth.authStateChanges().listen((user) {
@@ -33,9 +35,11 @@ class _MainScreenState extends State<MainScreen> {
     checkAuthentication();
     mapPage = MapView();
     parkingView = ParkingList();
+    profile = Profile();
     page = [
       mapPage,
       parkingView,
+      profile
     ];
     currentPage = mapPage;
     super.initState();
@@ -81,6 +85,12 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavyBarItem(
             icon: Icon(Icons.local_parking),
             title: Text('My Parking'),
+            activeColor: Colors.blueAccent,
+            inactiveColor: Colors.black,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.account_circle),
+            title: Text('Profile'),
             activeColor: Colors.blueAccent,
             inactiveColor: Colors.black,
           ),
